@@ -9,10 +9,11 @@ class ManageCoursePage extends React.Component {
     super(props, context);
 
     this.state = {
-      course: Object.assign({}, props.course),
+      course: Object.assign({}, this.props.course),
       errors: {}
     };
     this.updateCourseState = this.updateCourseState.bind(this);
+    this.saveCourse = this.saveCourse.bind(this);
   }
 
   updateCourseState(event){
@@ -21,10 +22,15 @@ class ManageCoursePage extends React.Component {
     course[field] = event.target.value;
     return this.setState({course: course});
   }
+
+  saveCourse(event){
+    this.props.actions.saveCourse(this.state.course);
+  }
   render() {
     return (
         <CourseForm
           allAuthors={this.props.authors}
+          onSave={this.saveCourse}
           onChange={this.updateCourseState}
           course={this.state.course}
           errors={this.state.errors}/>
@@ -34,7 +40,8 @@ class ManageCoursePage extends React.Component {
 
 ManageCoursePage.propTypes = {
   course: PropTypes.object.isRequired,
-  authors: PropTypes.array.isRequired
+  authors: PropTypes.array.isRequired,
+  actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
@@ -55,7 +62,7 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    action: bindActionCreators(courseActions, dispatch)
+    actions: bindActionCreators(courseActions, dispatch)
   };
 }
 
